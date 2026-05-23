@@ -1,0 +1,25 @@
+import { create } from "zustand";
+import type { User } from "@/types/user";
+
+interface AuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  setUser: (user: User | null) => void;
+  login: (user: User) => void;
+  logout: () => void;
+  setLoading: (loading: boolean) => void;
+}
+
+export const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  isAuthenticated: false,
+  isLoading: true,
+  setUser: (user) => set({ user, isAuthenticated: !!user }),
+  login: (user) => set({ user, isAuthenticated: true, isLoading: false }),
+  logout: () => {
+    if (typeof window !== "undefined") localStorage.removeItem("auth_token");
+    set({ user: null, isAuthenticated: false });
+  },
+  setLoading: (isLoading) => set({ isLoading }),
+}));
