@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "next-themes";
 import { ArrowRight } from "lucide-react";
 
 /**
@@ -11,8 +13,41 @@ import { ArrowRight } from "lucide-react";
  * Layout: 2-column grid (copy left, illustration right).
  * Features: "AI LEARNING PLATFORM" badge, headline, subtitle,
  *           dual CTA buttons, avatar social-proof row.
+ *
+ * The illustration uses a 3D flip animation (rotateY) when
+ * the user toggles between light and dark themes.
  */
+
+/** Flip animation variants — rotates around the Y axis */
+const flipVariants = {
+  initial: { rotateY: 90, opacity: 0, scale: 0.92 },
+  animate: {
+    rotateY: 0,
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+  exit: {
+    rotateY: -90,
+    opacity: 0,
+    scale: 0.92,
+    transition: { duration: 0.35, ease: [0.55, 0, 1, 0.45] },
+  },
+};
+
 export function HeroSection() {
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const isDark = resolvedTheme === "dark";
+  const heroSrc = isDark
+    ? "/images/landing/hero-dark.png"
+    : "/images/landing/hero-light.png";
+
   return (
     <section className="relative overflow-hidden pt-28 pb-8 sm:pt-32 sm:pb-12 md:pt-36 md:pb-16">
       {/* Decorative background circles (dark mode only) */}
@@ -83,32 +118,47 @@ export function HeroSection() {
             </div>
           </motion.div>
 
-          {/* ── Right Column: Illustration ── */}
+          {/* ── Right Column: Illustration with 3D Flip ── */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] as const }}
             className="relative mx-auto w-full max-w-lg lg:max-w-none"
+            style={{ perspective: 1200 }}
           >
             <div className="relative aspect-square w-full">
-              {/* Light illustration */}
-              <Image
-                src="/images/landing/hero-light.png"
-                alt="Person learning AI at a desk"
-                fill
-                className="object-contain dark:hidden"
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-              {/* Dark illustration */}
-              <Image
-                src="/images/landing/hero-dark.png"
-                alt="Person learning AI at a desk"
-                fill
-                className="hidden object-contain dark:block"
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+              {!mounted ? (
+                /* SSR placeholder — avoids hydration mismatch */
+                <Image
+                  src="/images/landing/hero-dark.png"
+                  alt="Person learning AI at a desk"
+                  fill
+                  className="object-contain"
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              ) : (
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={resolvedTheme}
+                    variants={flipVariants}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    className="absolute inset-0"
+                    style={{ transformStyle: "preserve-3d", backfaceVisibility: "hidden" }}
+                  >
+                    <Image
+                      src={heroSrc}
+                      alt="Person learning AI at a desk"
+                      fill
+                      className="object-contain"
+                      priority
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              )}
             </div>
           </motion.div>
         </div>
