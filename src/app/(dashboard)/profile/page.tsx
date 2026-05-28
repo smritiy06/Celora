@@ -6,8 +6,12 @@ import { GlassCard } from "@/components/shared/GlassCard";
 import { PageTransition } from "@/components/shared/PageTransition";
 import { mockCurrentUser, mockUserStats } from "@/data/users";
 import { cn } from "@/lib/utils";
+import { useUser } from "@clerk/nextjs";
 
 export default function ProfilePage() {
+  const { user } = useUser();
+  const userName = user?.fullName || mockCurrentUser.name;
+
   return (
     <PageTransition>
       <div className="space-y-6">
@@ -17,14 +21,14 @@ export default function ProfilePage() {
           <div className="relative z-10 flex flex-col items-center gap-6 sm:flex-row">
             <div className="relative">
               <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent-cyan text-2xl font-bold text-white ring-4 ring-primary/20">
-                {mockCurrentUser.name.split(" ").map(n => n[0]).join("")}
+                {userName.split(" ").map(n => n[0]).join("")}
               </div>
               <div className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full bg-accent-emerald text-xs font-bold text-white border-2 border-bg-primary">
                 {mockUserStats.currentLevel}
               </div>
             </div>
             <div className="text-center sm:text-left">
-              <h1 className="text-2xl font-bold text-text-primary">{mockCurrentUser.name}</h1>
+              <h1 className="text-2xl font-bold text-text-primary">{userName}</h1>
               <p className="mb-2 text-sm text-text-muted">{mockCurrentUser.bio}</p>
               <div className="flex flex-wrap justify-center gap-3 text-xs sm:justify-start">
                 <span className="flex items-center gap-1 text-primary-light"><Zap className="h-3.5 w-3.5" />{mockUserStats.totalXp.toLocaleString()} XP</span>

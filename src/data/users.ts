@@ -2,8 +2,8 @@ import type { User, UserStats } from "@/types/user";
 
 export const mockCurrentUser: User = {
   id: "current",
-  name: "Smriti Yadav",
-  email: "smriti@example.com",
+  name: "Ansh Yadav", // fallback name
+  email: "anshy9527@gmail.com", // fallback email
   avatar: "/images/avatars/default.jpg",
   role: "student",
   xp: 4200,

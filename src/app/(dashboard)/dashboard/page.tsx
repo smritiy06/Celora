@@ -48,7 +48,12 @@ const weakTopics = [
   { topic: "Dynamic Programming", accuracy: 71, category: "DSA" },
 ];
 
+import { useUser } from "@clerk/nextjs";
+
 export default function DashboardPage() {
+  const { user } = useUser();
+  const firstName = user?.firstName || mockCurrentUser.name.split(" ")[0];
+
   return (
     <PageTransition>
       <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-5">
@@ -58,7 +63,7 @@ export default function DashboardPage() {
             <div className="absolute -right-20 -top-20 h-60 w-60 rounded-full bg-primary/10 blur-[80px]" />
             <div className="relative z-10">
               <h1 className="mb-1 text-2xl font-bold sm:text-3xl">
-                Welcome back, {mockCurrentUser.name.split(" ")[0]}! 👋
+                Welcome back, {firstName}! 👋
               </h1>
               <p className="mb-4 text-text-muted">
                 Keep pushing — you&apos;re on a {mockUserStats.currentStreak}-day streak!
