@@ -1,64 +1,115 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ScrollReveal } from "@/components/shared/ScrollReveal";
-import { mockFaq } from "@/data/testimonials";
-import { cn } from "@/lib/utils";
+import { ChevronDown } from "lucide-react";
+
+/**
+ * FAQ Section — answers to common questions about the AI learning platform.
+ * Inline data — no external mock file needed.
+ */
+
+const faqs = [
+  {
+    id: "faq-1",
+    question: "What is Celora?",
+    answer: "Celora is an AI-powered adaptive learning platform. You set a learning goal, and AI generates a personalized roadmap with modules, quizzes, and tasks. Think of it as your intelligent study companion.",
+  },
+  {
+    id: "faq-2",
+    question: "How does the AI create my learning path?",
+    answer: "When you set a goal (like 'Become an ML Engineer'), our AI analyzes the skills needed, your current level, and your learning style to create a structured roadmap with modules in the optimal order.",
+  },
+  {
+    id: "faq-3",
+    question: "How does the AI Tutor work?",
+    answer: "The AI Tutor uses advanced language models to explain concepts, answer doubts, generate practice questions, create summaries, and build flashcards — all personalized to your current learning context.",
+  },
+  {
+    id: "faq-4",
+    question: "Can I track my learning progress?",
+    answer: "Absolutely! Celora provides detailed analytics including study time tracking, quiz performance, streak tracking, skill heatmaps, and AI-generated recommendations on what to focus on next.",
+  },
+  {
+    id: "faq-5",
+    question: "Is this different from Udemy or Coursera?",
+    answer: "Yes. Celora is not a course marketplace. There are no random courses to browse. Instead, you set a learning goal, and AI builds a personalized path specifically for you, with continuous guidance and adaptation.",
+  },
+  {
+    id: "faq-6",
+    question: "What topics does Celora cover?",
+    answer: "We cover AI/ML, Web Development, Data Structures & Algorithms, Cybersecurity, Mobile Development, Databases, UI/UX Design, and more. AI can generate paths for nearly any tech topic.",
+  },
+] as const;
 
 export function FaqSection() {
   const [openId, setOpenId] = useState<string | null>(null);
 
-  return (
-    <section id="faq" className="px-6 py-24 bg-bg-secondary/30">
-      <div className="mx-auto max-w-3xl">
-        <ScrollReveal>
-          <div className="mb-12 text-center">
-            <span className="mb-3 inline-block text-sm font-semibold text-primary-light uppercase tracking-wider">FAQ</span>
-            <h2 className="mb-4 text-3xl font-bold sm:text-4xl">
-              Frequently Asked <span className="gradient-text">Questions</span>
-            </h2>
-          </div>
-        </ScrollReveal>
+  const toggle = (id: string) => {
+    setOpenId((prev) => (prev === id ? null : id));
+  };
 
-        <div className="space-y-3">
-          {mockFaq.map((item, i) => (
-            <ScrollReveal key={item.id} delay={i * 0.08}>
+  return (
+    <section id="faq" className="py-20 md:py-28">
+      <div className="mx-auto max-w-3xl px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5 }}
+          className="mb-14 text-center"
+        >
+          <h2 className="mb-4 text-3xl font-bold text-text-primary sm:text-4xl">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-text-secondary">
+            Everything you need to know about Celora.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="space-y-3"
+        >
+          {faqs.map((faq) => {
+            const isOpen = openId === faq.id;
+            return (
               <div
-                className={cn(
-                  "rounded-xl bg-white/[0.03] border border-white/[0.06] overflow-hidden transition-colors",
-                  openId === item.id && "bg-white/[0.05] border-white/[0.1]"
-                )}
+                key={faq.id}
+                className="rounded-xl border border-glass-border bg-bg-elevated overflow-hidden transition-all duration-200 hover:border-primary/15"
               >
                 <button
-                  onClick={() => setOpenId(openId === item.id ? null : item.id)}
-                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                  onClick={() => toggle(faq.id)}
+                  className="flex w-full items-center justify-between px-6 py-4 text-left"
                 >
-                  <span className="text-sm font-medium text-text-primary">{item.question}</span>
+                  <span className="text-sm font-semibold text-text-primary pr-4">
+                    {faq.question}
+                  </span>
                   <ChevronDown
-                    className={cn(
-                      "h-4 w-4 shrink-0 text-text-muted transition-transform duration-300",
-                      openId === item.id && "rotate-180"
-                    )}
+                    className={`h-4 w-4 shrink-0 text-text-muted transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
                   />
                 </button>
                 <AnimatePresence>
-                  {openId === item.id && (
+                  {isOpen && (
                     <motion.div
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                      transition={{ duration: 0.2 }}
                     >
-                      <p className="px-5 pb-4 text-sm text-text-muted leading-relaxed">{item.answer}</p>
+                      <div className="px-6 pb-4 text-sm leading-relaxed text-text-secondary">
+                        {faq.answer}
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
-            </ScrollReveal>
-          ))}
-        </div>
+            );
+          })}
+        </motion.div>
       </div>
     </section>
   );

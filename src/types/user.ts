@@ -4,7 +4,7 @@ export interface User {
   name: string;
   email: string;
   avatar: string;
-  role: "student" | "instructor" | "admin";
+  role: "student" | "mentor" | "admin";
   xp: number;
   level: number;
   streak: number;
@@ -13,6 +13,12 @@ export interface User {
   skills: string[];
   achievements: Achievement[];
   certificates: Certificate[];
+  /** Onboarding preferences */
+  learningGoals: string[];
+  interests: string[];
+  skillLevel: "beginner" | "intermediate" | "advanced";
+  preferredStyle: "visual" | "reading" | "hands-on" | "mixed";
+  onboardingCompleted: boolean;
 }
 
 export interface Achievement {
@@ -27,7 +33,7 @@ export interface Achievement {
 export interface Certificate {
   id: string;
   title: string;
-  courseId: string;
+  pathId: string;
   issuedAt: string;
   credentialUrl: string;
 }
@@ -35,7 +41,7 @@ export interface Certificate {
 export interface UserStats {
   totalXp: number;
   currentLevel: number;
-  coursesCompleted: number;
+  pathsCompleted: number;
   quizzesTaken: number;
   totalStudyHours: number;
   currentStreak: number;

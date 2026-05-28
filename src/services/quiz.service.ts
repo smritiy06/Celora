@@ -1,7 +1,7 @@
 import { APP_CONFIG } from "@/constants/config";
-import { mockQuizzes, mockLeaderboard, mockDailyChallenge, mockQuizQuestions } from "@/data/quizzes";
+import { mockQuizzes, mockDailyChallenge, mockQuizQuestions } from "@/data/quizzes";
 import { delay } from "@/lib/utils";
-import type { Quiz, QuizQuestion, LeaderboardEntry, DailyChallenge } from "@/types/quiz";
+import type { Quiz, QuizQuestion, DailyChallenge } from "@/types/quiz";
 
 const USE_MOCK = APP_CONFIG.useMockData;
 
@@ -17,10 +17,6 @@ export const quizService = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getQuestions: async (_quizId: string): Promise<QuizQuestion[]> => {
     if (USE_MOCK) { await delay(400); return mockQuizQuestions; }
-    return [];
-  },
-  getLeaderboard: async (): Promise<LeaderboardEntry[]> => {
-    if (USE_MOCK) { await delay(400); return mockLeaderboard; }
     return [];
   },
   getDailyChallenge: async (): Promise<DailyChallenge> => {

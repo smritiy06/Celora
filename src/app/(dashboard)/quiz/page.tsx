@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Trophy, Zap, Flame, Clock, Target, Swords } from "lucide-react";
+import { Trophy, Zap, Flame, Clock, Target, Sparkles, Brain } from "lucide-react";
 import { GlassCard } from "@/components/shared/GlassCard";
 import { PageTransition } from "@/components/shared/PageTransition";
-import { mockQuizzes, mockDailyChallenge, mockLeaderboard } from "@/data/quizzes";
+import { mockQuizzes, mockDailyChallenge } from "@/data/quizzes";
+import { mockUserStats } from "@/data/users";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -14,7 +15,7 @@ export default function QuizArenaPage() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-text-primary">Quiz Arena</h1>
-          <p className="text-sm text-text-muted">Test your knowledge, earn XP, and climb the leaderboard</p>
+          <p className="text-sm text-text-muted">Test your knowledge, earn XP, and sharpen weak areas</p>
         </div>
 
         {/* Daily Challenge Banner */}
@@ -39,7 +40,13 @@ export default function QuizArenaPage() {
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Quiz Grid */}
           <div className="lg:col-span-2 space-y-4">
-            <h2 className="font-semibold text-text-primary">Topic Quizzes</h2>
+            <div className="flex items-center justify-between">
+              <h2 className="font-semibold text-text-primary">Topic Quizzes</h2>
+              <button className="flex items-center gap-1.5 rounded-lg bg-primary/10 border border-primary/20 px-3 py-1.5 text-xs font-medium text-primary-light hover:bg-primary/20 transition-colors">
+                <Sparkles className="h-3 w-3" />
+                AI Generate Quiz
+              </button>
+            </div>
             <motion.div
               className="grid gap-4 sm:grid-cols-2"
               initial="hidden" animate="show"
@@ -69,23 +76,6 @@ export default function QuizArenaPage() {
                 </motion.div>
               ))}
             </motion.div>
-
-            {/* Multiplayer Section */}
-            <GlassCard variant="elevated" padding="md" className="relative overflow-hidden">
-              <div className="absolute -right-10 -bottom-10 h-32 w-32 rounded-full bg-primary/10 blur-[50px]" />
-              <div className="relative z-10 flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent-cyan">
-                  <Swords className="h-6 w-6 text-white" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-text-primary">Multiplayer Quiz Battles</h3>
-                  <p className="text-xs text-text-muted">Challenge friends in real-time quiz duels</p>
-                </div>
-                <button className="rounded-lg bg-primary/10 border border-primary/20 px-4 py-2 text-xs font-medium text-primary-light hover:bg-primary/20 transition-colors">
-                  Coming Soon
-                </button>
-              </div>
-            </GlassCard>
           </div>
 
           {/* Sidebar */}
@@ -96,32 +86,52 @@ export default function QuizArenaPage() {
               <div className="grid grid-cols-2 gap-3">
                 <div className="rounded-lg bg-white/[0.03] p-3 text-center">
                   <Zap className="mx-auto mb-1 h-5 w-5 text-primary-light" />
-                  <p className="text-lg font-bold text-text-primary">4,200</p>
+                  <p className="text-lg font-bold text-text-primary">{mockUserStats.totalXp.toLocaleString()}</p>
                   <p className="text-[10px] text-text-muted">Total XP</p>
                 </div>
                 <div className="rounded-lg bg-white/[0.03] p-3 text-center">
                   <Flame className="mx-auto mb-1 h-5 w-5 text-amber-400" />
-                  <p className="text-lg font-bold text-text-primary">12</p>
+                  <p className="text-lg font-bold text-text-primary">{mockUserStats.currentStreak}</p>
                   <p className="text-[10px] text-text-muted">Day Streak</p>
                 </div>
               </div>
             </GlassCard>
 
-            {/* Leaderboard */}
+            {/* Performance */}
             <GlassCard variant="elevated" padding="md">
               <h3 className="mb-3 flex items-center gap-2 font-semibold text-text-primary">
-                <Trophy className="h-4 w-4 text-amber-400" /> Leaderboard
+                <Brain className="h-4 w-4 text-primary-light" /> Performance
               </h3>
-              <div className="space-y-2">
-                {mockLeaderboard.slice(0, 5).map((entry) => (
-                  <div key={entry.rank} className={cn("flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs", entry.userId === "current" && "bg-primary/5 border border-primary/20")}>
-                    <span className={cn("w-5 font-bold", entry.rank <= 3 ? "text-amber-400" : "text-text-muted")}>
-                      {entry.rank <= 3 ? ["🥇", "🥈", "🥉"][entry.rank - 1] : `#${entry.rank}`}
-                    </span>
-                    <span className="flex-1 text-text-secondary truncate">{entry.userName}</span>
-                    <span className="font-medium text-primary-light">{(entry.xp / 1000).toFixed(1)}K</span>
+              <div className="space-y-3">
+                <div>
+                  <div className="flex items-center justify-between text-xs mb-1">
+                    <span className="text-text-secondary">Overall Accuracy</span>
+                    <span className="font-medium text-primary-light">{mockUserStats.accuracy}%</span>
                   </div>
-                ))}
+                  <div className="h-1.5 rounded-full bg-white/[0.06]">
+                    <div className="h-full rounded-full bg-gradient-to-r from-primary to-accent-cyan" style={{ width: `${mockUserStats.accuracy}%` }} />
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-text-secondary">Quizzes Taken</span>
+                  <span className="font-medium text-text-primary">{mockUserStats.quizzesTaken}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-text-secondary">Paths Completed</span>
+                  <span className="font-medium text-text-primary">{mockUserStats.pathsCompleted}</span>
+                </div>
+              </div>
+            </GlassCard>
+
+            {/* Quiz Tips */}
+            <GlassCard variant="elevated" padding="md">
+              <h3 className="mb-3 flex items-center gap-2 font-semibold text-text-primary">
+                <Trophy className="h-4 w-4 text-amber-400" /> Tips
+              </h3>
+              <div className="space-y-2 text-xs text-text-secondary">
+                <p>• Complete daily challenges for bonus XP</p>
+                <p>• Focus on weak areas to improve accuracy</p>
+                <p>• Use AI Tutor to review missed questions</p>
               </div>
             </GlassCard>
           </div>

@@ -2,41 +2,47 @@
 
 import { use } from "react";
 import Link from "next/link";
-import { ArrowLeft, CheckCircle, Circle, Clock, BookOpen, Code, Trophy } from "lucide-react";
+import { ArrowLeft, CheckCircle, Circle, Clock, BookOpen, Code, Trophy, Sparkles } from "lucide-react";
 import { GlassCard } from "@/components/shared/GlassCard";
 import { PageTransition } from "@/components/shared/PageTransition";
-import { mockRoadmaps } from "@/data/roadmaps";
+import { mockGoals } from "@/data/goals";
 import { cn } from "@/lib/utils";
 
 const typeIcons: Record<string, typeof BookOpen> = { learn: BookOpen, practice: Code, project: Code, quiz: Trophy };
 
-export default function RoadmapDetailPage({ params }: { params: Promise<{ roadmapId: string }> }) {
+export default function GoalDetailPage({ params }: { params: Promise<{ roadmapId: string }> }) {
   const { roadmapId } = use(params);
-  const roadmap = mockRoadmaps.find((r) => r.id === roadmapId) || mockRoadmaps[0];
+  const goal = mockGoals.find((g) => g.id === roadmapId) || mockGoals[0];
 
   return (
     <PageTransition>
       <div className="space-y-6">
         <Link href="/roadmaps" className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-text-primary transition-colors">
-          <ArrowLeft className="h-4 w-4" /> Back to roadmaps
+          <ArrowLeft className="h-4 w-4" /> Back to goals
         </Link>
 
         <GlassCard variant="elevated" padding="lg">
-          <h1 className="mb-2 text-2xl font-bold text-text-primary">{roadmap.title}</h1>
-          <p className="mb-4 text-sm text-text-muted">{roadmap.description}</p>
-          <div className="flex items-center gap-4 text-sm text-text-muted mb-4">
-            <span className="flex items-center gap-1"><Clock className="h-4 w-4" />{roadmap.estimatedDuration}</span>
-            <span>{roadmap.totalCheckpoints} checkpoints</span>
-            <span>{roadmap.enrolledCount.toLocaleString()} enrolled</span>
+          <div className="mb-3 flex items-center gap-2">
+            {goal.aiGenerated && (
+              <span className="flex items-center gap-1 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-xs font-medium text-primary-light">
+                <Sparkles className="h-3 w-3" /> AI Generated
+              </span>
+            )}
           </div>
-          {roadmap.progress > 0 && (
+          <h1 className="mb-2 text-2xl font-bold text-text-primary">{goal.title}</h1>
+          <p className="mb-4 text-sm text-text-muted">{goal.description}</p>
+          <div className="flex items-center gap-4 text-sm text-text-muted mb-4">
+            <span className="flex items-center gap-1"><Clock className="h-4 w-4" />{goal.estimatedDuration}</span>
+            <span>{goal.totalCheckpoints} checkpoints</span>
+          </div>
+          {goal.progress > 0 && (
             <div>
               <div className="flex justify-between text-xs mb-1">
                 <span className="text-text-muted">Overall Progress</span>
-                <span className="text-primary-light font-medium">{roadmap.progress}%</span>
+                <span className="text-primary-light font-medium">{goal.progress}%</span>
               </div>
               <div className="h-2 rounded-full bg-white/[0.06]">
-                <div className="h-full rounded-full bg-gradient-to-r from-primary to-accent-cyan" style={{ width: `${roadmap.progress}%` }} />
+                <div className="h-full rounded-full bg-gradient-to-r from-primary to-accent-cyan" style={{ width: `${goal.progress}%` }} />
               </div>
             </div>
           )}
@@ -44,7 +50,7 @@ export default function RoadmapDetailPage({ params }: { params: Promise<{ roadma
 
         {/* Milestones */}
         <div className="space-y-4">
-          {roadmap.milestones.map((milestone, mi) => (
+          {goal.milestones.map((milestone, mi) => (
             <GlassCard key={milestone.id} variant="elevated" padding="md" className={cn(milestone.isActive && "border-primary/30")}>
               <div className="flex items-center gap-3 mb-4">
                 {milestone.isCompleted ? (

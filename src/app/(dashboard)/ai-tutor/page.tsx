@@ -24,7 +24,7 @@ const suggestedPrompts = [
 
 export default function AiTutorPage() {
   const [messages, setMessages] = useState<Message[]>([
-    { id: "1", role: "assistant", content: "Hello! I'm your AI tutor. I can explain concepts, help debug code, generate quizzes, and create study notes. What would you like to learn today? 🎓", timestamp: new Date().toISOString() },
+    { id: "1", role: "assistant", content: "Hey! I'm your Celora AI learning companion 🤖\n\nI can help you:\n• **Explain** complex concepts simply\n• **Quiz you** on any topic\n• **Summarize** your study notes\n• **Generate** flashcards & practice problems\n• **Identify** your weak areas\n\nWhat would you like to work on today?", timestamp: new Date().toISOString() },
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);

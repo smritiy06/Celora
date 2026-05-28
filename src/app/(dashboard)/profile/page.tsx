@@ -39,7 +39,7 @@ export default function ProfilePage() {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
-            { label: "Courses Done", value: mockUserStats.coursesCompleted, icon: Target, color: "text-primary-light" },
+            { label: "Paths Done", value: mockUserStats.pathsCompleted, icon: Target, color: "text-primary-light" },
             { label: "Quizzes Taken", value: mockUserStats.quizzesTaken, icon: Trophy, color: "text-amber-400" },
             { label: "Study Hours", value: mockUserStats.totalStudyHours, icon: Star, color: "text-accent-cyan" },
             { label: "Accuracy", value: `${mockUserStats.accuracy}%`, icon: GitBranch, color: "text-accent-emerald" },

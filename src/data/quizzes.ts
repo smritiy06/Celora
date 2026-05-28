@@ -1,4 +1,4 @@
-import type { Quiz, LeaderboardEntry, DailyChallenge, QuizQuestion } from "@/types/quiz";
+import type { Quiz, DailyChallenge, QuizQuestion } from "@/types/quiz";
 
 export const mockQuizzes: Quiz[] = [
   {
@@ -155,17 +155,6 @@ export const mockQuizQuestions: QuizQuestion[] = [
     topic: "Algorithms",
     difficulty: "medium",
   },
-];
-
-export const mockLeaderboard: LeaderboardEntry[] = [
-  { rank: 1, userId: "u-1", userName: "Emma Watson", userAvatar: "/images/avatars/emma.jpg", xp: 12500, streak: 45, quizzesCompleted: 128, accuracy: 94 },
-  { rank: 2, userId: "u-2", userName: "Raj Patel", userAvatar: "/images/avatars/raj.jpg", xp: 11200, streak: 38, quizzesCompleted: 115, accuracy: 91 },
-  { rank: 3, userId: "u-3", userName: "Sophia Lee", userAvatar: "/images/avatars/sophia.jpg", xp: 10800, streak: 52, quizzesCompleted: 102, accuracy: 89 },
-  { rank: 4, userId: "u-4", userName: "Liam O'Brien", userAvatar: "/images/avatars/liam.jpg", xp: 9500, streak: 29, quizzesCompleted: 98, accuracy: 88 },
-  { rank: 5, userId: "u-5", userName: "Aisha Khan", userAvatar: "/images/avatars/aisha.jpg", xp: 8900, streak: 33, quizzesCompleted: 91, accuracy: 92 },
-  { rank: 6, userId: "u-6", userName: "Carlos Mendez", userAvatar: "/images/avatars/carlos.jpg", xp: 8200, streak: 21, quizzesCompleted: 85, accuracy: 86 },
-  { rank: 7, userId: "u-7", userName: "Yuki Tanaka", userAvatar: "/images/avatars/yuki.jpg", xp: 7600, streak: 18, quizzesCompleted: 79, accuracy: 90 },
-  { rank: 8, userId: "current", userName: "You", userAvatar: "/images/avatars/default.jpg", xp: 4200, streak: 12, quizzesCompleted: 45, accuracy: 82 },
 ];
 
 export const mockDailyChallenge: DailyChallenge = {

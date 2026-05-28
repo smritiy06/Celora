@@ -1,27 +1,27 @@
 /**
- * Custom hook for course data fetching via TanStack Query.
+ * Custom hook for learning path data fetching via TanStack Query.
  * Abstracts the service layer so UI never calls services directly.
  */
 
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { coursesService } from "@/services/courses.service";
+import { learningPathsService } from "@/services/courses.service";
 
-/** Fetch all courses */
-export function useCourses() {
+/** Fetch all learning paths */
+export function useLearningPaths() {
   return useQuery({
-    queryKey: ["courses"],
-    queryFn: () => coursesService.getAll(),
+    queryKey: ["learningPaths"],
+    queryFn: () => learningPathsService.getAll(),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }
 
-/** Fetch a single course by ID */
-export function useCourse(courseId: string) {
+/** Fetch a single learning path by ID */
+export function useLearningPath(pathId: string) {
   return useQuery({
-    queryKey: ["course", courseId],
-    queryFn: () => coursesService.getById(courseId),
-    enabled: !!courseId,
+    queryKey: ["learningPath", pathId],
+    queryFn: () => learningPathsService.getById(pathId),
+    enabled: !!pathId,
   });
 }

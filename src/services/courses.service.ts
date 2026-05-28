@@ -1,52 +1,44 @@
 import { APP_CONFIG } from "@/constants/config";
-import { mockCourses } from "@/data/courses";
+import { mockLearningPaths } from "@/data/learningPaths";
 import { delay } from "@/lib/utils";
-import type { Course, CourseFilters } from "@/types/course";
+import type { LearningPath, PathFilters } from "@/types/learningPath";
 
-/** Courses service — swap mock data for real API by changing USE_MOCK */
+/** Learning paths service — swap mock data for real API by changing USE_MOCK */
 const USE_MOCK = APP_CONFIG.useMockData;
 
-export const coursesService = {
-  getAll: async (filters?: Partial<CourseFilters>): Promise<Course[]> => {
+export const learningPathsService = {
+  getAll: async (filters?: Partial<PathFilters>): Promise<LearningPath[]> => {
     if (USE_MOCK) {
       await delay(500);
-      let courses = [...mockCourses];
+      let paths = [...mockLearningPaths];
       if (filters?.search) {
         const q = filters.search.toLowerCase();
-        courses = courses.filter((c) => c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q));
+        paths = paths.filter((p) => p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
       }
       if (filters?.category && filters.category !== "all") {
-        courses = courses.filter((c) => c.category === filters.category);
+        paths = paths.filter((p) => p.category === filters.category);
       }
       if (filters?.difficulty && filters.difficulty !== "all") {
-        courses = courses.filter((c) => c.difficulty === filters.difficulty);
+        paths = paths.filter((p) => p.difficulty === filters.difficulty);
       }
-      return courses;
+      return paths;
     }
     // Real API call would go here
     return [];
   },
 
-  getById: async (id: string): Promise<Course | undefined> => {
+  getById: async (id: string): Promise<LearningPath | undefined> => {
     if (USE_MOCK) {
       await delay(300);
-      return mockCourses.find((c) => c.id === id);
+      return mockLearningPaths.find((p) => p.id === id);
     }
     return undefined;
   },
 
-  getEnrolled: async (): Promise<Course[]> => {
+  getActive: async (): Promise<LearningPath[]> => {
     if (USE_MOCK) {
       await delay(400);
-      return mockCourses.filter((c) => c.isEnrolled);
-    }
-    return [];
-  },
-
-  getRecommended: async (): Promise<Course[]> => {
-    if (USE_MOCK) {
-      await delay(400);
-      return mockCourses.filter((c) => !c.isEnrolled).slice(0, 3);
+      return mockLearningPaths.filter((p) => p.progress > 0 && p.progress < 100);
     }
     return [];
   },

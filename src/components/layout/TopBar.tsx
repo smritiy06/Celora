@@ -1,10 +1,11 @@
 "use client";
 
-import { Search, Bell, Menu } from "lucide-react";
+import { Search, Bell, Menu, Flame, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useSidebarStore } from "@/store/sidebarStore";
 import { UserButton } from "@clerk/nextjs";
+import { mockUserStats } from "@/data/users";
 
 export function TopBar() {
   const { toggle } = useSidebarStore();
@@ -29,14 +30,25 @@ export function TopBar() {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
           <input
             type="text"
-            placeholder="Search courses, quizzes, topics..."
+            placeholder="Search paths, quizzes, topics..."
             className="h-9 w-64 rounded-lg bg-white/[0.04] border border-white/[0.08] pl-9 pr-4 text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/25 transition-colors"
           />
         </div>
       </div>
 
-      {/* Right: Actions */}
+      {/* Right: Streak + XP + Actions */}
       <div className="flex items-center gap-2">
+        {/* Streak */}
+        <div className="hidden items-center gap-1.5 rounded-lg bg-amber-500/10 border border-amber-500/15 px-2.5 py-1.5 sm:flex">
+          <Flame className="h-3.5 w-3.5 text-amber-400" />
+          <span className="text-xs font-semibold text-amber-400">{mockUserStats.currentStreak}</span>
+        </div>
+        {/* XP */}
+        <div className="hidden items-center gap-1.5 rounded-lg bg-primary/10 border border-primary/15 px-2.5 py-1.5 sm:flex">
+          <Zap className="h-3.5 w-3.5 text-primary-light" />
+          <span className="text-xs font-semibold text-primary-light">{mockUserStats.totalXp.toLocaleString()}</span>
+        </div>
+
         <ThemeToggle />
         <button
           className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] transition-colors"

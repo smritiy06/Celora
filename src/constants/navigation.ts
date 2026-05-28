@@ -3,9 +3,8 @@ import {
   BookOpen,
   Trophy,
   Bot,
-  Map,
+  Target,
   StickyNote,
-  Users,
   BarChart3,
   UserCircle,
   Settings,
@@ -14,12 +13,11 @@ import {
 /** Sidebar navigation items */
 export const sidebarNavItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Courses", href: "/courses", icon: BookOpen },
+  { label: "Learning Paths", href: "/courses", icon: BookOpen },
+  { label: "Goals", href: "/roadmaps", icon: Target },
   { label: "Quiz Arena", href: "/quiz", icon: Trophy },
   { label: "AI Tutor", href: "/ai-tutor", icon: Bot },
-  { label: "Roadmaps", href: "/roadmaps", icon: Map },
   { label: "Notes", href: "/notes", icon: StickyNote },
-  { label: "Community", href: "/community", icon: Users },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
   { label: "Profile", href: "/profile", icon: UserCircle },
   { label: "Settings", href: "/settings", icon: Settings },
@@ -27,17 +25,16 @@ export const sidebarNavItems = [
 
 /** Landing page navigation */
 export const landingNavItems = [
-  { label: "Courses", href: "#courses" },
-  { label: "Roadmap", href: "#roadmap" },
-  { label: "Community", href: "#community" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "About", href: "#about" },
+  { label: "Features", href: "#features" },
+  { label: "How It Works", href: "#how-it-works" },
+  { label: "AI Capabilities", href: "#capabilities" },
+  { label: "FAQ", href: "#faq" },
 ] as const;
 
 /** Mobile bottom nav items (subset of sidebar) */
 export const bottomNavItems = [
   { label: "Home", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Courses", href: "/courses", icon: BookOpen },
+  { label: "Paths", href: "/courses", icon: BookOpen },
   { label: "Quiz", href: "/quiz", icon: Trophy },
   { label: "AI Tutor", href: "/ai-tutor", icon: Bot },
   { label: "Profile", href: "/profile", icon: UserCircle },

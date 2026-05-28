@@ -1,5 +1,5 @@
-/** Roadmap types */
-export interface Roadmap {
+/** Goal/Roadmap types */
+export interface LearningGoal {
   id: string;
   title: string;
   description: string;
@@ -10,8 +10,8 @@ export interface Roadmap {
   completedCheckpoints: number;
   progress: number;
   difficulty: "beginner" | "intermediate" | "advanced";
-  enrolledCount: number;
   milestones: Milestone[];
+  aiGenerated: boolean;
 }
 
 export interface Milestone {

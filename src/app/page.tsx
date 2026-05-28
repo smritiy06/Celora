@@ -3,22 +3,23 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Logo } from "@/components/shared/Logo";
 import { landingNavItems } from "@/constants/navigation";
 import { cn } from "@/lib/utils";
-import { HeroSection } from "@/features/landing/HeroSection";
-import { StatsSection } from "@/features/landing/StatsSection";
-import { PopularCoursesSection } from "@/features/landing/PopularCoursesSection";
+import { AIHeroSection } from "@/features/landing/AIHeroSection";
+import { HowItWorks } from "@/features/landing/HowItWorks";
 import { FeaturesSection } from "@/features/landing/FeaturesSection";
+import { CapabilitiesSection } from "@/features/landing/CapabilitiesSection";
+import { FaqSection } from "@/features/landing/FaqSection";
 import { Footer } from "@/components/layout/Footer";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 
 /**
- * Landing Page — Celora
+ * Landing Page — Celora AI Learning Platform
  *
- * Precisely mirrors the design reference: navbar → hero → stats →
- * popular courses → features → CTA → footer.
+ * AI-first design: Hero → How It Works → Features → Capabilities → FAQ → CTA → Footer
+ * No marketplace patterns: no course grids, no fake stats, no testimonials.
  */
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
@@ -62,12 +63,6 @@ export default function LandingPage() {
 
           {/* Desktop Actions */}
           <div className="hidden items-center gap-5 md:flex">
-            <button
-              className="text-text-secondary transition-colors hover:text-text-primary"
-              aria-label="Search"
-            >
-              <Search className="h-4.5 w-4.5" />
-            </button>
             <ThemeToggle />
             <Link
               href="/login"
@@ -137,10 +132,11 @@ export default function LandingPage() {
       </motion.nav>
 
       {/* ─── Page Sections ─── */}
-      <HeroSection />
-      <StatsSection />
-      <PopularCoursesSection />
+      <AIHeroSection />
+      <HowItWorks />
       <FeaturesSection />
+      <CapabilitiesSection />
+      <FaqSection />
 
       {/* ─── CTA Section ─── */}
       <section className="px-6 py-20">
@@ -153,16 +149,16 @@ export default function LandingPage() {
             className="rounded-3xl border border-primary/15 bg-bg-elevated p-12 sm:p-16"
           >
             <h2 className="mb-4 text-3xl font-bold text-text-primary sm:text-4xl">
-              Ready to <span className="gradient-text">Level Up</span>?
+              Ready to <span className="gradient-text">Start Learning</span>?
             </h2>
             <p className="mb-8 text-lg text-text-secondary">
-              Join 25,000+ learners already using Celora. Start for free, no credit card required.
+              Set your first learning goal and let AI create your personalized path. Free to get started.
             </p>
             <Link
               href="/signup"
               className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-base font-semibold text-primary-foreground shadow-md shadow-primary/20 transition-all hover:bg-primary-dark hover:shadow-lg hover:shadow-primary/30"
             >
-              Start Learning Free
+              Begin Your Journey
             </Link>
           </motion.div>
         </div>
