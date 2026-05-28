@@ -43,3 +43,8 @@ Scikit-learn • TensorFlow/PyTorch • Gemini API / OpenAI API
 ## 🎯 Goal
 
 Build a modern educational platform that combines **AI, full-stack development, analytics, and personalized learning** to create a smarter study experience.
+
+
+.env.local
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_YWxsb3dpbmctbW9zcXVpdG8tOTguY2xlcmsuYWNjb3VudHMuZGV2JA
+CLERK_SECRET_KEY=sk_test_90nuxhl0H37ywkgHCWgmFeHSuEwj8ZP9LKyyyVwJUw

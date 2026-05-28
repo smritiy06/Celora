@@ -4,7 +4,7 @@ import { Search, Bell, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useSidebarStore } from "@/store/sidebarStore";
-import { mockCurrentUser } from "@/data/users";
+import { UserButton } from "@clerk/nextjs";
 
 export function TopBar() {
   const { toggle } = useSidebarStore();
@@ -47,11 +47,14 @@ export function TopBar() {
             3
           </span>
         </button>
-        <div className="ml-1 flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center text-xs font-bold text-white">
-            {mockCurrentUser.name.split(" ").map(n => n[0]).join("")}
-          </div>
-          <span className="hidden md:block text-sm font-medium text-text-primary">{mockCurrentUser.name.split(" ")[0]}</span>
+        <div className="ml-1">
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox: "h-8 w-8",
+              },
+            }}
+          />
         </div>
       </div>
     </header>
