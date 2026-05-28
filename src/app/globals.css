@@ -147,7 +147,46 @@ body {
   color: var(--surface-text-primary);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ============================================
+   VIEW TRANSITION — RADIAL THEME WIPE
+   Asymmetric: dark radiates out, light absorbs in
+   ============================================ */
+
+/* Disable the default View Transition crossfade */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/*
+ * → Dark:  NEW (dark) is on top, clip-path expands outward
+ *          revealing darkness radiating from the toggle
+ * → Light: OLD (dark) is on top, clip-path collapses inward
+ *          the sun absorbs the darkness into the toggle point
+ */
+
+/* Default: going dark — new snapshot on top */
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+/* Going light — flip: old (dark) snapshot on top so its collapse is visible */
+[data-theme-direction="to-light"]::view-transition-old(root) {
+  z-index: 9999;
+}
+[data-theme-direction="to-light"]::view-transition-new(root) {
+  z-index: 1;
+}
+
+/* Prevent any layout shift during the view transition */
+::view-transition-group(root) {
+  animation-duration: 0s;
 }
 
 /* ============================================

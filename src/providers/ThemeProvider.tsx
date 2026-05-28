@@ -13,7 +13,7 @@ export function ThemeProvider({ children }: Props) {
       attribute="data-theme"
       defaultTheme="dark"
       enableSystem={false}
-      disableTransitionOnChange={false}
+      disableTransitionOnChange={true}
     >
       {children}
     </NextThemesProvider>
