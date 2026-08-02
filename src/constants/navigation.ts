@@ -8,6 +8,9 @@ import {
   BarChart3,
   UserCircle,
   Settings,
+  GraduationCap,
+  Plus,
+  Users,
 } from "lucide-react";
 
 /** Sidebar navigation items */
@@ -39,3 +42,23 @@ export const bottomNavItems = [
   { label: "AI Tutor", href: "/ai-tutor", icon: Bot },
   { label: "Profile", href: "/profile", icon: UserCircle },
 ] as const;
+
+/** Teacher sidebar navigation items */
+export const teacherNavItems = [
+  { label: "Dashboard", href: "/teacher", icon: LayoutDashboard },
+  { label: "My Courses", href: "/teacher/courses", icon: BookOpen },
+  { label: "Create Course", href: "/teacher/courses/create", icon: Plus },
+  { label: "Students", href: "/teacher", icon: Users },
+  { label: "Analytics", href: "/teacher", icon: BarChart3 },
+  { label: "Profile", href: "/profile", icon: UserCircle },
+  { label: "Settings", href: "/settings", icon: Settings },
+] as const;
+
+/** Teacher mobile bottom nav items */
+export const teacherBottomNavItems = [
+  { label: "Home", href: "/teacher", icon: GraduationCap },
+  { label: "Courses", href: "/teacher/courses", icon: BookOpen },
+  { label: "Create", href: "/teacher/courses/create", icon: Plus },
+  { label: "Profile", href: "/profile", icon: UserCircle },
+] as const;
+

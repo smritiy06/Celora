@@ -4,11 +4,13 @@ import { Search, Bell, Menu, Flame, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { useSidebarStore } from "@/store/sidebarStore";
+import { useUserStore } from "@/store/userStore";
 import { UserButton } from "@clerk/nextjs";
 import { mockUserStats } from "@/data/users";
 
 export function TopBar() {
   const { toggle } = useSidebarStore();
+  const { profile } = useUserStore();
 
   return (
     <header
@@ -59,7 +61,12 @@ export function TopBar() {
             3
           </span>
         </button>
-        <div className="ml-1">
+        <div className="ml-1 flex items-center gap-2">
+          {profile?.role === "teacher" && (
+            <span className="hidden items-center gap-1 rounded-full bg-accent-cyan/10 border border-accent-cyan/15 px-2 py-0.5 text-[10px] font-semibold text-accent-cyan sm:flex">
+              👩‍🏫 Teacher
+            </span>
+          )}
           <UserButton
             appearance={{
               elements: {

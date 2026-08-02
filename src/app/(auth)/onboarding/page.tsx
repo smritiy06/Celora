@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowLeft, Sparkles, Brain, Code, Shield, Smartphone, Database, Palette, Check } from "lucide-react";
 import { Logo } from "@/components/shared/Logo";
 import { cn } from "@/lib/utils";
+import { useUserStore } from "@/store/userStore";
 
 /**
  * Onboarding — 4-step wizard collecting learning preferences.
@@ -58,6 +59,7 @@ const slideVariants = {
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { updatePreferences, syncProfile } = useUserStore();
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -84,16 +86,29 @@ export default function OnboardingPage() {
     }
   };
 
-  const next = () => {
+  const next = async () => {
     if (step < TOTAL_STEPS) {
       setDirection(1);
       setStep((s) => s + 1);
     } else {
-      // Complete onboarding
+      // Complete onboarding — save preferences to MongoDB
       setIsGenerating(true);
+
+      // Ensure user profile exists in MongoDB
+      await syncProfile();
+
+      // Save preferences
+      await updatePreferences({
+        goal: selectedGoal,
+        level: selectedLevel,
+        style: selectedStyle,
+        interests: selectedInterests,
+      });
+
+      // Brief delay for the generating animation, then redirect
       setTimeout(() => {
         router.push("/dashboard");
-      }, 2500);
+      }, 1500);
     }
   };
 

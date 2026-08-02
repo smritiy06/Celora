@@ -4,7 +4,7 @@ export interface User {
   name: string;
   email: string;
   avatar: string;
-  role: "student" | "mentor" | "admin";
+  role: "student" | "teacher" | "mentor" | "admin";
   xp: number;
   level: number;
   streak: number;

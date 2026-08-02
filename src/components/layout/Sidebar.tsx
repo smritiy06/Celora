@@ -6,12 +6,19 @@ import { motion } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/shared/Logo";
-import { sidebarNavItems } from "@/constants/navigation";
+import { sidebarNavItems, teacherNavItems } from "@/constants/navigation";
 import { useSidebarStore } from "@/store/sidebarStore";
+import { useUserStore } from "@/store/userStore";
 
 export function Sidebar() {
   const pathname = usePathname();
   const { isCollapsed, setCollapsed } = useSidebarStore();
+  const { profile } = useUserStore();
+
+  // Use teacher nav items if the user is a teacher and on teacher routes
+  const isTeacher = profile?.role === "teacher";
+  const isOnTeacherRoute = pathname.startsWith("/teacher");
+  const navItems = isTeacher && isOnTeacherRoute ? teacherNavItems : sidebarNavItems;
 
   return (
     <aside
@@ -25,14 +32,44 @@ export function Sidebar() {
         <Logo showText={!isCollapsed} size="sm" />
       </div>
 
+      {/* Role switcher (for teachers) */}
+      {isTeacher && !isCollapsed && (
+        <div className="border-b border-white/[0.06] px-3 py-2">
+          <div className="flex rounded-lg bg-white/[0.03] border border-white/[0.06] p-0.5">
+            <Link
+              href="/dashboard"
+              className={cn(
+                "flex-1 rounded-md px-3 py-1.5 text-center text-xs font-medium transition-colors",
+                !isOnTeacherRoute
+                  ? "bg-primary/10 text-primary-light"
+                  : "text-text-muted hover:text-text-secondary"
+              )}
+            >
+              Student
+            </Link>
+            <Link
+              href="/teacher"
+              className={cn(
+                "flex-1 rounded-md px-3 py-1.5 text-center text-xs font-medium transition-colors",
+                isOnTeacherRoute
+                  ? "bg-primary/10 text-primary-light"
+                  : "text-text-muted hover:text-text-secondary"
+              )}
+            >
+              Teacher
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto p-3 hide-scrollbar">
         <ul className="space-y-1">
-          {sidebarNavItems.map((item) => {
-            const isActive = pathname.startsWith(item.href);
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || (item.href !== "/teacher" && item.href !== "/dashboard" && pathname.startsWith(item.href));
             const Icon = item.icon;
             return (
-              <li key={item.href}>
+              <li key={item.href + item.label}>
                 <Link
                   href={item.href}
                   className={cn(

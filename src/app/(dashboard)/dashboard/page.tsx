@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Flame, Target, Zap, Bot, BookOpen, Trophy, StickyNote, Route, ArrowRight, CheckCircle2, Circle, Brain, TrendingUp } from "lucide-react";
 import { GlassCard } from "@/components/shared/GlassCard";
@@ -49,10 +50,38 @@ const weakTopics = [
 ];
 
 import { useUser } from "@clerk/nextjs";
+import { useUserStore } from "@/store/userStore";
 
 export default function DashboardPage() {
   const { user } = useUser();
+  const { profile, fetchProfile, syncProfile } = useUserStore();
   const firstName = user?.firstName || mockCurrentUser.name.split(" ")[0];
+
+  // Fetch/sync user profile from MongoDB on mount
+  useEffect(() => {
+    async function init() {
+      const existing = await fetchProfile();
+      if (!existing) {
+        // First visit: create profile in MongoDB
+        await syncProfile();
+      }
+    }
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** Resolve the user's learning goal label from their preferences */
+  const goalLabels: Record<string, string> = {
+    "ai-ml": "AI/ML Engineer",
+    "web-dev": "Full Stack Developer",
+    "data-science": "Data Scientist",
+    "mobile-dev": "Mobile App Developer",
+    "cybersecurity": "Cybersecurity Expert",
+    "ui-ux": "UI/UX Designer",
+  };
+  const userGoal = profile?.preferences?.goal
+    ? goalLabels[profile.preferences.goal] || profile.preferences.goal
+    : null;
 
   return (
     <PageTransition>
@@ -71,7 +100,9 @@ export default function DashboardPage() {
               <div className="flex flex-wrap gap-4 text-sm">
                 <span className="flex items-center gap-1.5 text-amber-400"><Flame className="h-4 w-4" />{mockUserStats.currentStreak} day streak</span>
                 <span className="flex items-center gap-1.5 text-primary-light"><Zap className="h-4 w-4" />{mockUserStats.totalXp.toLocaleString()} XP</span>
-                <span className="flex items-center gap-1.5 text-accent-cyan"><Target className="h-4 w-4" />{mockCurrentUser.learningGoals[0]}</span>
+                {userGoal && (
+                  <span className="flex items-center gap-1.5 text-accent-cyan"><Target className="h-4 w-4" />{userGoal}</span>
+                )}
               </div>
             </div>
           </div>
