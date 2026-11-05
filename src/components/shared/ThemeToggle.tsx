@@ -20,7 +20,7 @@ interface Props {
  */
 export function ThemeToggle({ className }: Props) {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme: theme, setTheme } = useTheme();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -52,7 +52,7 @@ export function ThemeToggle({ className }: Props) {
     );
 
     // Check for View Transition API support
-    if (!document.startViewTransition) {
+    if (!document.startViewTransition || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setTheme(nextTheme);
       return;
     }
@@ -112,7 +112,7 @@ export function ThemeToggle({ className }: Props) {
     return (
       <div
         className={cn(
-          "flex h-9 w-9 items-center justify-center rounded-lg border border-glass-border bg-bg-elevated",
+          "flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-surface",
           className
         )}
       />
@@ -126,7 +126,7 @@ export function ThemeToggle({ className }: Props) {
       ref={buttonRef}
       onClick={toggleTheme}
       className={cn(
-        "theme-toggle-btn relative flex h-9 w-9 items-center justify-center rounded-lg border border-glass-border bg-bg-elevated text-text-secondary transition-all duration-200 hover:bg-bg-hover hover:text-text-primary overflow-hidden",
+        "theme-toggle-btn relative flex h-9 w-9 items-center justify-center rounded-lg border border-line bg-surface text-ink-2 transition-all duration-200 hover:bg-sunken hover:text-ink overflow-hidden",
         isAnimating && "pointer-events-none",
         className
       )}

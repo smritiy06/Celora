@@ -27,3 +27,10 @@ dist-ssr
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# Previous UI, kept locally until the rebuild is accepted
+.old-ui-backup
+
+# Firebase
+firebase-debug.log
+.firebase
