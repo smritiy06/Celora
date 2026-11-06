@@ -5,6 +5,11 @@
 
 import type {
   AnswerInput,
+  AppNotification,
+  Certificate,
+  CourseReview,
+  CourseReviews,
+  DiscussionPost,
   Course,
   CourseInsights,
   CourseOutline,
@@ -16,6 +21,10 @@ import type {
   Lesson,
   LessonNote,
   ProgressData,
+  TutorChat,
+  TutorChatSummary,
+  TutorEvent,
+  TutorStatus,
   Quiz,
   QuizAttempt,
   QuizForAttempt,
@@ -26,8 +35,11 @@ import type { CatalogQuery } from "@/domain/courses";
 import type {
   CourseCreateInput,
   CourseUpdateInput,
+  DiscussionPostInput,
   GoalInput,
+  ReviewInput,
   OnboardingInput,
+  TutorRequestInput,
   ProfileUpdateInput,
   QuizCreateInput,
   QuizUpdateInput,
@@ -76,6 +88,7 @@ function query(params: object): string {
 export const api = {
   me: () => request<User>("/api/users"),
   updateProfile: (input: ProfileUpdateInput) => request<User>("/api/users", "PATCH", input),
+  setRole: (role: User["role"]) => request<User>("/api/users/role", "PUT", { role }),
   completeOnboarding: (input: OnboardingInput) => request<User>("/api/users/onboarding", "PUT", input),
   dashboard: () => request<DashboardData>("/api/me/dashboard"),
   progress: () => request<ProgressData>("/api/me/progress"),
@@ -100,6 +113,58 @@ export const api = {
     request<{ note: LessonNote | null }>(`/api/courses/${courseId}/lessons/${lessonId}/note`, "PUT", { content }),
   notes: () => request<LessonNote[]>("/api/notes"),
   deleteNote: (id: string) => request<unknown>(`/api/notes/${id}`, "DELETE"),
+
+  reviews: (courseId: string) => request<CourseReviews>(`/api/courses/${courseId}/reviews`),
+  saveReview: (courseId: string, input: ReviewInput) =>
+    request<CourseReview>(`/api/courses/${courseId}/reviews`, "PUT", input),
+  deleteReview: (courseId: string) => request<unknown>(`/api/courses/${courseId}/reviews`, "DELETE"),
+
+  discussion: (courseId: string, lessonId: string) =>
+    request<DiscussionPost[]>(`/api/courses/${courseId}/lessons/${lessonId}/discussion`),
+  createPost: (courseId: string, lessonId: string, input: DiscussionPostInput) =>
+    request<unknown>(`/api/courses/${courseId}/lessons/${lessonId}/discussion`, "POST", input),
+  deletePost: (postId: string) => request<unknown>(`/api/discussions/${postId}`, "DELETE"),
+  reportPost: (postId: string) => request<unknown>(`/api/discussions/${postId}/report`, "POST", {}),
+
+  notifications: () => request<AppNotification[]>("/api/notifications"),
+  markNotificationsRead: (ids?: string[]) => request<unknown>("/api/notifications", "PATCH", { ids }),
+
+  certificate: (courseId: string) => request<Certificate>(`/api/me/certificates/${courseId}`),
+
+  tutorStatus: () => request<TutorStatus>("/api/tutor/status"),
+  tutorChats: () => request<TutorChatSummary[]>("/api/tutor/chats"),
+  tutorChat: (id: string) => request<TutorChat>(`/api/tutor/chats/${id}`),
+  deleteTutorChat: (id: string) => request<unknown>(`/api/tutor/chats/${id}`, "DELETE"),
+  /** Streams the tutor's answer, calling onEvent for each event as it arrives. */
+  askTutor: async (input: Partial<TutorRequestInput>, onEvent: (event: TutorEvent) => void, signal: AbortSignal) => {
+    let response: Response;
+    try {
+      response = await fetch("/api/tutor", {
+        method: "POST",
+        signal,
+        headers: { "Content-Type": "application/json", "x-time-zone": Intl.DateTimeFormat().resolvedOptions().timeZone },
+        body: JSON.stringify(input),
+      });
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") throw error;
+      throw new ApiClientError(0, "Can't reach Celora. Check your connection and try again.");
+    }
+    if (!response.ok || !response.body) {
+      const data = await response.json().catch(() => null);
+      throw new ApiClientError(response.status, data?.error ?? "Something went wrong. Please try again.");
+    }
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+      for (const line of lines) if (line.trim()) onEvent(JSON.parse(line) as TutorEvent);
+    }
+  },
 
   goals: () => request<LearningGoal[]>("/api/goals"),
   createGoal: (input: GoalInput) => request<LearningGoal>("/api/goals", "POST", input),

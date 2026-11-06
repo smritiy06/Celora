@@ -106,6 +106,7 @@ function Catalog() {
         <Select aria-label="Sort by" value={query.sort} onChange={(e) => update("sort", e.target.value)}>
           <option value="">Recommended</option>
           <option value="newest">Newest</option>
+          <option value="rating">Highest rated</option>
           <option value="popular">Most learners</option>
           <option value="shortest">Shortest</option>
         </Select>

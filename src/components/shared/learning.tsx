@@ -19,6 +19,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Card, ProgressBar, Tag } from "@/components/ui/misc";
 import { categoryLabel } from "@/constants/catalog";
+import { RatingBadge } from "@/components/shared/rating";
 import { cn, formatDuration, plural } from "@/lib/utils";
 import type { ActivityDay, CourseSummary, TopicScore } from "@/types/domain";
 
@@ -100,9 +101,10 @@ export function CourseCard({ course }: { course: CourseSummary }) {
         <h3 className="mb-1 line-clamp-2 font-medium leading-snug text-ink group-hover:text-accent-ink">{course.title}</h3>
         <p className="mb-3 line-clamp-2 text-[13px] leading-relaxed text-ink-2">{course.description}</p>
         <div className="mt-auto">
-          <p className="mb-2 truncate text-[13px] text-ink-3">
+          <p className="mb-1 truncate text-[13px] text-ink-3">
             {course.teacherName} · {categoryLabel(course.category)}
           </p>
+          <p className="mb-2"><RatingBadge rating={course.rating} /></p>
           <div className="flex items-center justify-between text-[13px] text-ink-3">
             <span className="flex items-center gap-1.5">
               <Clock aria-hidden className="h-3.5 w-3.5" />

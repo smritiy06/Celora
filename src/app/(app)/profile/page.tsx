@@ -141,23 +141,25 @@ export default function ProfilePage() {
         <ActivityHeatmap days={data.activity} today={today} />
       </Section>
 
-      <Section title="Completed courses" icon={Award} tone="success">
+      <Section title="Certificates" icon={Award} tone="success">
         {data.coursesCompleted.length > 0 ? (
           <ul className="grid gap-3 sm:grid-cols-2">
             {data.coursesCompleted.map((course) => (
               <li key={course.id}>
-                <Link href={`/courses/${course.id}`} className="flex items-center gap-3 rounded-xl border bg-canvas p-3 hover:border-line-strong">
+                <Link href={`/certificates/${course.id}`} className="flex items-center gap-3 rounded-xl border bg-canvas p-3 hover:border-line-strong">
                   <IconTile icon={CheckCircle2} tone="success" />
                   <span className="min-w-0">
                     <span className="block truncate text-sm font-medium text-ink">{course.title}</span>
-                    <span className="text-[13px] text-ink-3">{course.progress?.completedAt && `Finished ${formatDate(course.progress.completedAt)}`}</span>
+                    <span className="text-[13px] text-ink-3">
+                      {course.progress?.completedAt && `Finished ${formatDate(course.progress.completedAt)} · `}View certificate
+                    </span>
                   </span>
                 </Link>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="text-sm text-ink-2">Courses you finish will be listed here.</p>
+          <p className="text-sm text-ink-2">Finish every lesson in a course to earn its certificate.</p>
         )}
       </Section>
     </div>

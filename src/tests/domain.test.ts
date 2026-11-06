@@ -174,7 +174,7 @@ describe("publish checks", () => {
 describe("catalog", () => {
   const summary = (id: string, fields: Partial<CourseSummary>): CourseSummary => ({
     id, title: id, description: "", category: "web-dev", difficulty: "beginner", thumbnail: "", teacherName: "T",
-    moduleCount: 1, lessonCount: 1, durationMinutes: 60, learnerCount: 0, updatedAt: "2026-01-01", progress: null, ...fields,
+    moduleCount: 1, lessonCount: 1, durationMinutes: 60, learnerCount: 0, rating: null, updatedAt: "2026-01-01", progress: null, ...fields,
   });
   const list = [
     summary("react basics", { learnerCount: 5, updatedAt: "2026-01-01" }),

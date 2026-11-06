@@ -76,6 +76,9 @@ export interface Course {
   isPublished: boolean;
   modules: CourseModule[];
   enrolledStudents: string[];
+  /** Running totals kept by the reviews model, so the catalog can sort by rating. */
+  ratingSum?: number;
+  ratingCount?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -110,6 +113,7 @@ export interface CourseSummary {
   lessonCount: number;
   durationMinutes: number;
   learnerCount: number;
+  rating: RatingSummary | null;
   updatedAt: string;
   progress: CourseProgress | null;
 }
@@ -300,4 +304,106 @@ export interface CourseInsights {
   completionRate: number;
   averageProgress: number;
   lessonFunnel: { lessonId: string; title: string; completed: number }[];
+}
+
+export interface RatingSummary {
+  average: number;
+  count: number;
+}
+
+export interface CourseReview {
+  id: string;
+  courseId: string;
+  authorName: string;
+  rating: number;
+  text: string;
+  isYou: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CourseReviews {
+  summary: RatingSummary;
+  /** How many reviews gave 1 to 5 stars, at index 0 to 4. */
+  distribution: number[];
+  reviews: CourseReview[];
+  mine: CourseReview | null;
+  canReview: boolean;
+}
+
+export interface DiscussionPost {
+  id: string;
+  courseId: string;
+  lessonId: string;
+  parentId: string | null;
+  authorName: string;
+  isTeacher: boolean;
+  isYou: boolean;
+  canDelete: boolean;
+  reportedByYou: boolean;
+  body: string;
+  createdAt: string;
+  replies: DiscussionPost[];
+}
+
+export type NotificationType = "reply" | "question" | "review" | "enrollment" | "completion";
+
+export interface AppNotification {
+  id: string;
+  type: NotificationType;
+  title: string;
+  body: string;
+  href: string;
+  read: boolean;
+  createdAt: string;
+}
+
+export interface TutorContext {
+  courseId: string;
+  lessonId: string;
+  courseTitle: string;
+  lessonTitle: string;
+}
+
+export interface TutorMessage {
+  role: "user" | "assistant";
+  content: string;
+  /** True when the learner stopped the answer before it finished. */
+  stopped?: boolean;
+  createdAt: string;
+}
+
+export interface TutorChatSummary {
+  id: string;
+  title: string;
+  context: TutorContext | null;
+  updatedAt: string;
+}
+
+export interface TutorChat extends TutorChatSummary {
+  messages: TutorMessage[];
+}
+
+export interface TutorStatus {
+  available: boolean;
+  remainingToday: number;
+  dailyLimit: number;
+}
+
+/** Newline-delimited JSON events streamed by the tutor route. */
+export type TutorEvent =
+  | { type: "messageStart"; chatId: string; title: string }
+  | { type: "delta"; text: string }
+  | { type: "messageComplete" }
+  | { type: "error"; message: string };
+
+export interface Certificate {
+  id: string;
+  learnerName: string;
+  courseId: string;
+  courseTitle: string;
+  teacherName: string;
+  lessonCount: number;
+  durationMinutes: number;
+  completedAt: string;
 }

@@ -22,6 +22,7 @@ export function PublicHeader() {
         <nav aria-label="Main" className="hidden items-center gap-6 text-sm text-ink-2 sm:flex">
           <Link href="/courses" className="hover:text-ink">Learning Paths</Link>
           <Link href="/quiz" className="hover:text-ink">Quiz Arena</Link>
+          <Link href="/teach" className="hover:text-ink">Teach</Link>
         </nav>
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
@@ -37,7 +38,7 @@ export function PublicHeader() {
 export function Footer() {
   const groups = [
     { title: "Platform", links: [{ label: "Learning Paths", href: "/courses" }, { label: "Quiz Arena", href: "/quiz" }] },
-    { title: "Get started", links: [{ label: "Log in", href: "/login" }, { label: "Sign up", href: "/signup" }, { label: "Teach on Celora", href: "/signup" }] },
+    { title: "Get started", links: [{ label: "Log in", href: "/login" }, { label: "Sign up", href: "/signup" }, { label: "Teach on Celora", href: "/teach" }, { label: "Teacher log in", href: "/teach/login" }] },
   ];
   return (
     <footer className="border-t bg-surface">

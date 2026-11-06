@@ -8,6 +8,7 @@ import {
   BookOpen,
   ChevronLeft,
   Flame,
+  GraduationCap,
   LayoutDashboard,
   ListChecks,
   Menu,
@@ -25,6 +26,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Footer, PublicHeader, Wordmark } from "@/components/layout/Public";
+import { NotificationBell } from "@/components/layout/NotificationBell";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { dateKey, levelFromXp, visibleStreak } from "@/domain/gamification";
 import { useMe, useSession } from "@/hooks/useAccount";
@@ -42,7 +44,7 @@ const LEARN_NAV: NavItem[] = [
   { label: "Learning Paths", href: "/courses", icon: BookOpen },
   { label: "Goals", href: "/roadmaps", icon: Target },
   { label: "Quiz Arena", href: "/quiz", icon: Trophy },
-  { label: "AI Tutor", href: "/ai-tutor", icon: Bot, soon: true },
+  { label: "AI Tutor", href: "/ai-tutor", icon: Bot },
   { label: "Notes", href: "/notes", icon: StickyNote },
   { label: "Analytics", href: "/analytics", icon: BarChart3 },
   { label: "Profile", href: "/profile", icon: UserCircle },
@@ -62,7 +64,12 @@ const isActive = (pathname: string, href: string) =>
 
 /** Learning and quiz-taking fill the screen, the way a good course player does. */
 const isFocusRoute = (pathname: string) =>
-  /^\/courses\/[^/]+\/lessons\//.test(pathname) || /^\/quiz\/[^/]+\/take$/.test(pathname);
+  /^\/courses\/[^/]+\/lessons\//.test(pathname) ||
+  /^\/quiz\/[^/]+\/take$/.test(pathname) ||
+  pathname.startsWith("/certificates/");
+
+/** Pages that manage their own height and scrolling, like the tutor chat. */
+const isFullBleed = (pathname: string) => pathname === "/ai-tutor";
 
 const COLLAPSE_KEY = "celora.sidebar.collapsed";
 
@@ -145,6 +152,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       >
         <div className={cn("flex h-16 items-center border-b px-4", collapsed && "justify-center")}>
           <Wordmark href={isTeacher && onTeachRoute ? "/teacher" : "/dashboard"} showText={!collapsed} />
+          {isTeacher && onTeachRoute && !collapsed && (
+            <span className="ml-auto rounded-md bg-accent-soft px-2 py-0.5 text-[11px] font-medium text-accent-ink">Teacher</span>
+          )}
         </div>
 
         {isTeacher && !collapsed && (
@@ -206,7 +216,18 @@ export function AppShell({ children }: { children: ReactNode }) {
           </ul>
         </nav>
 
-        <div className="border-t p-3">
+        <div className="space-y-1 border-t p-3">
+          {me && !isTeacher && (
+            <Link
+              href="/teacher"
+              title={collapsed ? "Teach on Celora" : undefined}
+              aria-label={collapsed ? "Teach on Celora" : undefined}
+              className={cn("flex min-h-9 items-center gap-3 rounded-lg px-3 text-sm text-ink-2 hover:bg-sunken hover:text-ink", collapsed && "justify-center px-0")}
+            >
+              <GraduationCap aria-hidden className="h-[18px] w-[18px] shrink-0" />
+              {!collapsed && "Teach on Celora"}
+            </Link>
+          )}
           <button
             onClick={toggleCollapsed}
             aria-expanded={!collapsed}
@@ -238,6 +259,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </span>
               </Link>
             )}
+            <NotificationBell />
             <ThemeToggle />
             <div className="ml-1 flex items-center">
               <UserButton>
@@ -250,7 +272,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        <main id="main" className="mx-auto w-full max-w-7xl flex-1 p-4 pb-24 sm:p-6 lg:pb-8">
+        <main
+          id="main"
+          className={cn("mx-auto w-full flex-1", isFullBleed(pathname) ? "min-h-0" : "max-w-7xl p-4 pb-24 sm:p-6 lg:pb-8")}
+        >
           <motion.div
             key={pathname}
             initial={{ opacity: 0, y: 6 }}
@@ -274,11 +299,11 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </Link>
               </li>
             ))}
-            {isTeacher && (
+            {me && (
               <li>
                 <Link href={onTeachRoute ? "/dashboard" : "/teacher"} className="flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm text-accent-ink hover:bg-sunken">
                   <BookOpen aria-hidden className="h-[18px] w-[18px]" />
-                  Switch to {onTeachRoute ? "Student" : "Teacher"}
+                  {!isTeacher ? "Teach on Celora" : `Switch to ${onTeachRoute ? "Student" : "Teacher"}`}
                 </Link>
               </li>
             )}

@@ -98,6 +98,10 @@ export default function OnboardingPage() {
     } catch {
       /* Start fresh if storage is unavailable. */
     }
+    // Arriving from the teacher portal's sign-up means they're here to teach.
+    if (new URLSearchParams(window.location.search).get("as") === "teacher") {
+      setAnswers((a) => ({ ...a, role: a.role ?? "teacher" }));
+    }
   }, []);
   useEffect(() => {
     try {

@@ -1,16 +1,18 @@
 "use client";
 
-import { Monitor, Moon, Palette, Shield, Sun, Target, User as UserIcon } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { GraduationCap, Monitor, Moon, Palette, Shield, Sun, Target, User as UserIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Section } from "@/components/shared/learning";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonLink } from "@/components/ui/button";
 import { Field, Select } from "@/components/ui/field";
 import { ErrorState, LoadingBlock, PageHeader } from "@/components/ui/misc";
 import { CATEGORIES, DIFFICULTIES, LEARNING_GOALS } from "@/constants/catalog";
 import { useMe, useSession } from "@/hooks/useAccount";
 import { useUpdateProfile } from "@/hooks/useProfile";
 import { cn } from "@/lib/utils";
+import { api } from "@/services/api";
 import type { Difficulty } from "@/types/domain";
 
 const THEMES = [
@@ -48,6 +50,32 @@ function ThemeSetting() {
         })}
       </div>
     </fieldset>
+  );
+}
+
+function TeachingSetting({ isTeacher }: { isTeacher: boolean }) {
+  const client = useQueryClient();
+  const change = useMutation({
+    mutationFn: () => api.setRole(isTeacher ? "student" : "teacher"),
+    onSuccess: (user) => client.setQueryData(["me"], user),
+  });
+  return (
+    <div className="mt-5">
+      <Section title="Teaching" icon={GraduationCap}>
+        <p className="mb-4 text-sm text-ink-2">
+          {isTeacher
+            ? "Teaching is on. You can create courses and quizzes from the teacher portal. Turning it off hides the portal; your courses stay published."
+            : "Turn on teaching to create courses and quizzes. Your learning progress stays as it is."}
+        </p>
+        {change.error && <div className="mb-3"><ErrorState error={change.error} /></div>}
+        <div className="flex flex-wrap gap-2">
+          <Button variant={isTeacher ? "secondary" : "primary"} onClick={() => change.mutate()} disabled={change.isPending}>
+            {change.isPending ? "Saving…" : isTeacher ? "Turn off teaching" : "Start teaching"}
+          </Button>
+          {isTeacher && <ButtonLink href="/teacher" variant="ghost">Open teacher portal</ButtonLink>}
+        </div>
+      </Section>
+    </div>
   );
 }
 
@@ -166,6 +194,8 @@ export default function SettingsPage() {
               <Button variant="secondary" onClick={openAccount}>Manage account</Button>
             </Section>
           )}
+
+          {tab === "account" && <TeachingSetting isTeacher={me.role === "teacher"} />}
         </div>
       </div>
     </div>

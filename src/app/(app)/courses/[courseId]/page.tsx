@@ -1,10 +1,12 @@
 "use client";
 
-import { BookOpen, Check, CheckCircle2, ChevronDown, Clock, FileText, Layers, PlayCircle, Users } from "lucide-react";
+import { Award, BookOpen, Check, CheckCircle2, ChevronDown, Clock, FileText, Layers, PlayCircle, Users } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use } from "react";
 import { DifficultyTag, Section } from "@/components/shared/learning";
+import { RatingBadge } from "@/components/shared/rating";
+import { CourseReviewsSection } from "@/features/community/Reviews";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Card, ErrorState, LoadingBlock, ProgressBar, Tag } from "@/components/ui/misc";
 import { categoryLabel } from "@/constants/catalog";
@@ -52,6 +54,7 @@ export default function CoursePage({ params }: { params: Promise<{ courseId: str
             <p className="mt-3 leading-relaxed text-ink-2">{course.description}</p>
             <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t pt-4 text-[13px] text-ink-2">
               <span>Taught by <span className="font-medium text-ink">{course.teacherName}</span></span>
+              <a href="#reviews" className="hover:underline"><RatingBadge rating={course.rating} /></a>
               {course.durationMinutes > 0 && (
                 <span className="flex items-center gap-1.5"><Clock aria-hidden className="h-3.5 w-3.5" />{formatDuration(course.durationMinutes)}</span>
               )}
@@ -115,6 +118,8 @@ export default function CoursePage({ params }: { params: Promise<{ courseId: str
               ))}
             </div>
           </Section>
+
+          <CourseReviewsSection courseId={courseId} />
         </div>
 
         <aside className="lg:sticky lg:top-20 lg:self-start">
@@ -129,6 +134,9 @@ export default function CoursePage({ params }: { params: Promise<{ courseId: str
                 <>
                   <Tag tone="success">Completed</Tag>
                   <p className="mt-2 text-sm text-ink-2">You finished every lesson. Revisit any of them whenever you like.</p>
+                  <ButtonLink href={`/certificates/${courseId}`} variant="secondary" className="mt-4 w-full">
+                    <Award aria-hidden className="h-4 w-4" /> View certificate
+                  </ButtonLink>
                 </>
               ) : (
                 <>

@@ -8,7 +8,7 @@ import type {
   UserPreferences,
 } from "@/types/domain";
 
-export type CatalogSort = "recommended" | "newest" | "popular" | "shortest";
+export type CatalogSort = "recommended" | "rating" | "newest" | "popular" | "shortest";
 
 export interface CatalogQuery {
   q?: string;
@@ -37,6 +37,12 @@ export function toProgress(course: Course, enrollment: Enrollment | null): Cours
   };
 }
 
+export function ratingOf(course: Pick<Course, "ratingSum" | "ratingCount">) {
+  const count = course.ratingCount ?? 0;
+  if (count === 0) return null;
+  return { average: Math.round(((course.ratingSum ?? 0) / count) * 10) / 10, count };
+}
+
 export function toSummary(course: Course, enrollment: Enrollment | null = null): CourseSummary {
   return {
     id: course.id,
@@ -53,6 +59,7 @@ export function toSummary(course: Course, enrollment: Enrollment | null = null):
       0
     ),
     learnerCount: course.enrolledStudents.length,
+    rating: ratingOf(course),
     updatedAt: course.updatedAt,
     progress: toProgress(course, enrollment),
   };
@@ -124,6 +131,10 @@ export function filterCatalog(
   switch ((query.sort ?? "recommended") as CatalogSort) {
     case "newest":
       return filtered.sort(byNewest);
+    case "rating":
+      return filtered.sort(
+        (a, b) => (b.rating?.average ?? 0) - (a.rating?.average ?? 0) || (b.rating?.count ?? 0) - (a.rating?.count ?? 0) || byNewest(a, b)
+      );
     case "popular":
       return filtered.sort((a, b) => b.learnerCount - a.learnerCount || byNewest(a, b));
     case "shortest":

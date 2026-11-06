@@ -1,12 +1,13 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Check, ChevronDown, FileText, PlayCircle, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bot, Check, ChevronDown, FileText, PlayCircle, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { use, useState } from "react";
 import { Markdown } from "@/components/shared/learning";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { ErrorState, LoadingBlock, ProgressBar } from "@/components/ui/misc";
+import { LessonDiscussion } from "@/features/community/Discussion";
 import { KnowledgeCheck, LessonNotes, LessonResources, LessonVideo } from "@/features/learning/lesson-parts";
 import { useCompleteLesson, useCourse, useLesson } from "@/hooks/useLearning";
 import { cn, plural } from "@/lib/utils";
@@ -104,6 +105,12 @@ export default function LessonPage({ params }: { params: Promise<{ courseId: str
             <X aria-hidden className="h-5 w-5" />
           </Link>
           <p className="min-w-0 flex-1 truncate text-sm font-medium">{outline.title}</p>
+          {(isEnrolled || outline.isOwner) && (
+            <ButtonLink href={`/ai-tutor?courseId=${courseId}&lessonId=${lessonId}`} variant="secondary" size="sm" aria-label="Ask the AI Tutor about this lesson">
+              <Bot aria-hidden className="h-4 w-4" />
+              <span className="hidden sm:inline">Ask the tutor</span>
+            </ButtonLink>
+          )}
           {outline.progress && (
             <div className="hidden w-40 items-center gap-2 sm:flex">
               <ProgressBar percent={outline.progress.percent} label="Course progress" />
@@ -151,6 +158,7 @@ export default function LessonPage({ params }: { params: Promise<{ courseId: str
                 {lesson.data.check && <KnowledgeCheck key={lessonId} check={lesson.data.check} />}
                 <LessonResources resources={lesson.data.resources} />
                 {isEnrolled && <LessonNotes key={`notes-${lessonId}`} courseId={courseId} lessonId={lessonId} />}
+                {(isEnrolled || outline.isOwner) && <LessonDiscussion key={`discussion-${lessonId}`} courseId={courseId} lessonId={lessonId} />}
                 {earned && !next && (
                   <div role="status" className="max-w-[66ch] rounded-lg border bg-success-soft p-4 text-sm">
                     <p className="font-medium">{earned.finished ? "Course complete. Well done." : "Lesson complete."}</p>

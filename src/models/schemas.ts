@@ -147,3 +147,29 @@ export type QuizCreateInput = z.infer<typeof quizCreateSchema>;
 export type GoalInput = z.infer<typeof goalSchema>;
 export type OnboardingInput = z.infer<typeof onboardingSchema>;
 export type ProfileUpdateInput = z.infer<typeof profileUpdateSchema>;
+
+export const reviewSchema = z.object({
+  rating: z.number({ error: "Choose a rating" }).int().min(1, "Choose a rating").max(5),
+  text: z.string().trim().max(2000, "Keep your review under 2,000 characters").default(""),
+});
+
+export const discussionPostSchema = z.object({
+  body: z.string({ error: "Write something first" }).trim().min(1, "Write something first").max(4000, "Keep posts under 4,000 characters"),
+  parentId: z.string().min(1).nullish().transform((v) => v ?? null),
+});
+
+export type ReviewInput = z.infer<typeof reviewSchema>;
+export type DiscussionPostInput = z.infer<typeof discussionPostSchema>;
+
+export const tutorRequestSchema = z.object({
+  chatId: z.string().min(1).nullish().transform((v) => v ?? null),
+  message: z.string().trim().max(8000, "Keep messages under 8,000 characters").default(""),
+  /** Re-answers the last question instead of asking a new one. */
+  regenerate: z.boolean().default(false),
+  context: z
+    .object({ courseId: z.string().min(1), lessonId: z.string().min(1) })
+    .nullish()
+    .transform((v) => v ?? null),
+});
+
+export type TutorRequestInput = z.infer<typeof tutorRequestSchema>;

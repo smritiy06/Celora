@@ -33,6 +33,7 @@ const NAV = [
   { label: "Capabilities", href: "#capabilities" },
   { label: "FAQ", href: "#faq" },
   { label: "Courses", href: "/courses" },
+  { label: "Teach", href: "/teach" },
 ];
 
 const GOALS = [
@@ -70,7 +71,7 @@ const CAPABILITIES: { icon: LucideIcon; tone: Tone; title: string; text: string 
 const FAQS = [
   { q: "What is Celora?", a: "A learning platform that combines structured courses, quizzes that explain every answer, and progress tracking, so you always know what to learn next." },
   { q: "Who creates the courses?", a: "Teachers on Celora. Anyone can sign up to teach, and a course only goes live once its author publishes it." },
-  { q: "Is there an AI Tutor?", a: "An AI Tutor is on the way. It isn't available yet, and we'd rather tell you that than show you canned answers." },
+  { q: "Is there an AI Tutor?", a: "Yes. It explains concepts, writes study notes and practice questions, helps debug code, and can read the lesson you have open. Its answers are AI-generated, so check important details against your course." },
   { q: "Can I track my progress?", a: "Yes. Celora tracks lessons, quiz scores by topic, learning time, streaks, and XP, and shows which topics are worth revisiting." },
   { q: "Who can see my progress?", a: "Your notes and scores are private. If you stay on the leaderboard, others see your first name, last initial, and XP. You can turn that off in Settings." },
   { q: "How much does it cost?", a: "Courses and quizzes are currently free." },
@@ -299,7 +300,7 @@ export function LandingPage() {
               <ButtonLink href="/signup" size="lg">
                 <BookOpen aria-hidden className="h-4 w-4" /> Start as a student
               </ButtonLink>
-              <ButtonLink href="/signup" size="lg" variant="secondary">
+              <ButtonLink href="/teach/signup" size="lg" variant="secondary">
                 <GraduationCap aria-hidden className="h-4 w-4" /> Start as a teacher
               </ButtonLink>
             </div>

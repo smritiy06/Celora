@@ -65,6 +65,12 @@ export async function completeOnboarding(clerkId: string, input: OnboardingInput
   return toUser(await ref.get());
 }
 
+export async function setRole(clerkId: string, role: User["role"]): Promise<User> {
+  const ref = users().doc(clerkId);
+  await ref.update({ role, updatedAt: Timestamp.now() });
+  return toUser(await ref.get());
+}
+
 export async function updateProfile(clerkId: string, input: ProfileUpdateInput): Promise<User> {
   const ref = users().doc(clerkId);
   await ref.update({ ...input, updatedAt: Timestamp.now() });
@@ -85,7 +91,7 @@ export async function getActivity(clerkId: string, fromDate: string): Promise<Ac
 }
 
 /** Shows first name and last initial only; other learners' details stay private. */
-function publicName(name: string): string {
+export function publicName(name: string): string {
   const [first, ...rest] = name.trim().split(/\s+/);
   const last = rest.at(-1);
   return last ? `${first} ${last[0]}.` : first;
